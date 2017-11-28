@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.NodeServices;
 using System.Threading.Tasks;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace MarketCarpenterCore.Ext.MojoTemplateEngine
 {
@@ -54,7 +55,7 @@ namespace MarketCarpenterCore.Ext.MojoTemplateEngine
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             path = Path.Combine(path, JSCompilerPath);
             TemplateReadTask.Wait();
-            var res = Node.InvokeAsync<string>(path, TemplateReadTask.Result, vm);
+            var res = Node.InvokeAsync<string>(path, TemplateReadTask.Result, JsonConvert.SerializeObject(vm));
             res.Wait();
             return res.Result;
         }

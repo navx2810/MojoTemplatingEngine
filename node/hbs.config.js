@@ -18,30 +18,57 @@ const path = require('path')
 */
 
 // Developers note: console.error() will show up in the terminal output in VSCode.
-hbs.registerHelper("date", function(input, format) {
+hbs.registerHelper("date", function (input, format) {
     format = hbs.escapeExpression(format) || null
     input = hbs.escapeExpression(input)
     return filters.date(input, format)
 })
-hbs.registerHelper("uppercase", function(input) { return filters.uppercase( hbs.escapeExpression(input) ) })
-hbs.registerHelper("lowercase", function(input) { return filters.lowercase( hbs.escapeExpression(input) ) })
-hbs.registerHelper("capitalize", function(input) { return filters.capitalize( hbs.escapeExpression(input) ) })
-hbs.registerHelper("currency", function(input) { return filters.currency( hbs.escapeExpression(input) ) })
-hbs.registerHelper("json", function(input, pretty) { return new hbs.SafeString(filters.json(input, pretty)) })
-hbs.registerHelper("require", function(route, vm) {
+hbs.registerHelper("uppercase", function (input) {
+    return filters.uppercase(hbs.escapeExpression(input))
+})
+hbs.registerHelper("lowercase", function (input) {
+    return filters.lowercase(hbs.escapeExpression(input))
+})
+hbs.registerHelper("capitalize", function (input) {
+    return filters.capitalize(hbs.escapeExpression(input))
+})
+hbs.registerHelper("currency", function (input) {
+    return filters.currency(hbs.escapeExpression(input))
+})
+hbs.registerHelper("json", function (input, pretty) {
+    return new hbs.SafeString(filters.json(input, pretty))
+})
+hbs.registerHelper("require", function (route, vm) {
     route = path.join('.', route.replace(/^ |~/, ''))
-    let template = fs.readFileSync(route,  'utf-8')
+    let template = fs.readFileSync(route, 'utf-8')
     vm = vm || this
     return new hbs.SafeString(hbs.compile(template)(this))
 })
-hbs.registerHelper("assign", function(name, val){
+hbs.registerHelper("assign", function (name, val) {
     this[name] = val
 })
-hbs.registerHelper("registerResource", function(res) {
+hbs.registerHelper("registerResource", function (res) {
     return new hbs.SafeString("{% registerResource '" + res + "' %}")
 })
 
-hbs.registerHelper
+hbs.registerHelper("x", function (expression, options) {
+    var result;
+    var context = this;
+    with(context) {
+        result = (function () {
+            try {
+                return eval(expression);
+            } catch (e) {
+                console.warn('Expression: {{x \'' + expression + '\'}}\n•JS-Error: ', e, '\n•Context: ', context);
+            }
+        }).call(context); // to make eval's lexical this=context
+    }
+    return result;
+});
+
+hbs.registerHelper("xif", function (expression, options) {
+    return Handlebars.helpers["x"].apply(this, [expression, options]) ? options.fn(this) : options.inverse(this);
+});
 
 // Return the configured module
 module.exports = hbs
