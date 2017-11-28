@@ -3,6 +3,7 @@ const hbs = require("handlebars")
 const filters = require("./filters")
 const fs = require('fs')
 const path = require('path')
+const qs = require('querystring')
 
 /**
     Initialize the engine library with any helper, mixins. . ., any features you can use in the template.
@@ -88,8 +89,12 @@ hbs.registerHelper({
         return arr.splice(count)
     },
 
-    ForceMaxWidth: function(size, image) {
-        return '<h2 class="text-danger">FIX FORCEMAXWIDTH</h2>'
+    ForceMaxWidth: function(size, url) {
+        const [uri, queryString] = url.split('?')
+        let query = qs.parse(queryString)
+        query['w'] = size
+        url = uri + "?" + qs.unescape(qs.stringify(query))
+        return new hbs.SafeString(url)
     }
 
 })
