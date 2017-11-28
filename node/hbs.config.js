@@ -38,6 +38,10 @@ hbs.registerHelper("currency", function (input) {
 hbs.registerHelper("json", function (input, pretty) {
     return new hbs.SafeString(filters.json(input, pretty))
 })
+hbs.registerHelper('concat', function(a, b) {
+    return new hbs.SafeString(a+b)
+})
+
 hbs.registerHelper("require", function (route, vm) {
     route = path.join('.', route.replace(/^ |~/, ''))
     let template = fs.readFileSync(route, 'utf-8')
@@ -49,6 +53,11 @@ hbs.registerHelper("assign", function (name, val) {
 })
 hbs.registerHelper("registerResource", function (res) {
     return new hbs.SafeString("{% registerResource '" + res + "' %}")
+})
+
+hbs.registerHelper('cycle', function(...list) {
+    console.error(this)
+    return ""
 })
 
 hbs.registerHelper("x", function (expression, options) {
