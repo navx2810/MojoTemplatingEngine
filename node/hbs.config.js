@@ -67,7 +67,7 @@ hbs.registerHelper("x", function (expression, options) {
 });
 
 hbs.registerHelper("xif", function (expression, options) {
-    return Handlebars.helpers["x"].apply(this, [expression, options]) ? options.fn(this) : options.inverse(this);
+    return hbs.helpers["x"].apply(this, [expression, options]) ? options.fn(this) : options.inverse(this);
 });
 
 // Return the configured module
