@@ -52,14 +52,14 @@ hbs.registerHelper({
         return new hbs.SafeString("{% registerResource '" + res + "' %}")
     },
 
-    cycle: function (...list) {
-        console.error(this)
-        return ""
+    cycle: function (index, ...list) {
+        let i = index % (list.length-1)
+        return new hbs.SafeString(list[i])
     },
 
     x: function (expression, options) {
-        var result;
-        var context = this;
+        let result;
+        let context = this;
         with(context) {
             result = (function () {
                 try {
@@ -78,6 +78,18 @@ hbs.registerHelper({
 
     comment: function() {
         return ""
+    },
+
+    limit: function(count, arr) {
+        return arr.slice(0, count)
+    },
+
+    skip: function(count, arr) {
+        return arr.splice(count)
+    },
+
+    ForceMaxWidth: function(size, image) {
+        return '<h2 class="text-danger">FIX FORCEMAXWIDTH</h2>'
     }
 
 })
